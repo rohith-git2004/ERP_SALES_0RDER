@@ -85,24 +85,7 @@ export class ReviewOrderComponent implements OnInit {
     this.router.navigate(['/new-order']);
   }
 
-  // Local Print
   openPrint(): void {
-    if (!this.order) {
-      return;
-    }
-
-    const orderData = encodeURIComponent(
-      JSON.stringify(this.order)
-    );
-
-    window.open(
-      `http://localhost:4201/?order=${orderData}`,
-      '_blank'
-    );
-  }
-
-  // Live Print
-  openLivePrint(): void {
     if (!this.order) {
       return;
     }
@@ -117,24 +100,7 @@ export class ReviewOrderComponent implements OnInit {
     );
   }
 
-  // Local Report
   openReport(): void {
-    if (!this.order) {
-      return;
-    }
-
-    const orderData = encodeURIComponent(
-      JSON.stringify(this.order)
-    );
-
-    window.open(
-      `http://localhost:4202/?order=${orderData}`,
-      '_blank'
-    );
-  }
-
-  // Live Report
-  openLiveReport(): void {
     if (!this.order) {
       return;
     }
