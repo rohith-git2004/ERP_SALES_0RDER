@@ -85,6 +85,7 @@ export class ReviewOrderComponent implements OnInit {
     this.router.navigate(['/new-order']);
   }
 
+  // Local Print
   openPrint(): void {
     if (!this.order) {
       return;
@@ -100,6 +101,23 @@ export class ReviewOrderComponent implements OnInit {
     );
   }
 
+  // Live Print
+  openLivePrint(): void {
+    if (!this.order) {
+      return;
+    }
+
+    const orderData = encodeURIComponent(
+      JSON.stringify(this.order)
+    );
+
+    window.open(
+      `https://erp-sales-order-print-7zij.vercel.app/?order=${orderData}`,
+      '_blank'
+    );
+  }
+
+  // Local Report
   openReport(): void {
     if (!this.order) {
       return;
@@ -111,6 +129,22 @@ export class ReviewOrderComponent implements OnInit {
 
     window.open(
       `http://localhost:4202/?order=${orderData}`,
+      '_blank'
+    );
+  }
+
+  // Live Report
+  openLiveReport(): void {
+    if (!this.order) {
+      return;
+    }
+
+    const orderData = encodeURIComponent(
+      JSON.stringify(this.order)
+    );
+
+    window.open(
+      `https://erp-sales-order-reports-angular.vercel.app/?order=${orderData}`,
       '_blank'
     );
   }
