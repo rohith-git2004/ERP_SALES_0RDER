@@ -251,6 +251,7 @@ td.amount {
 .review-actions {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 8px;
   margin-top: 14px;
 }
@@ -258,11 +259,17 @@ td.amount {
 .review-actions button {
   min-width: 90px;
   height: 30px;
+  padding: 0 14px;
   border-radius: 4px;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
   font-weight: 700;
   cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
+
+
+/* BACK BUTTON */
 
 .back-button {
   border: 1px solid #a48b74;
@@ -270,10 +277,50 @@ td.amount {
   color: #111;
 }
 
+.back-button:hover {
+  background: #f2ddc5;
+}
+
+
+/* SAVE BUTTON */
+
 .save-button {
   border: 1px solid #0870df;
   background: #0870df;
   color: #fff;
+}
+
+.save-button:hover {
+  border-color: #075ebd;
+  background: #075ebd;
+}
+
+
+/* PRINT BUTTON */
+
+.print-button {
+  border: 1px solid #555f69;
+  background: #ffffff;
+  color: #26333e;
+}
+
+.print-button:hover {
+  border-color: #39434d;
+  background: #eef2f5;
+}
+
+
+/* REPORT BUTTON */
+
+.report-button {
+  border: 1px solid #2f7d5a;
+  background: #2f7d5a;
+  color: #ffffff;
+}
+
+.report-button:hover {
+  border-color: #256447;
+  background: #256447;
 }
 
 
@@ -350,4 +397,36 @@ td.amount {
   .bill-section {
     max-width: none;
   }
+
+  .review-actions {
+    justify-content: stretch;
+    flex-wrap: wrap;
+  }
+
+  .review-actions button {
+    flex: 1;
+    min-width: 80px;
+  }
+}
+
+
+/* PRINT */
+
+@media print {
+
+  .review-page {
+    padding: 0;
+    background: #fff;
+  }
+
+  .review-window {
+    min-height: auto;
+    border: 0;
+    padding: 0;
+  }
+
+  .review-actions {
+    display: none;
+  }
+
 }

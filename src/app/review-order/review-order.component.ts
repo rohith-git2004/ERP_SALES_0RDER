@@ -84,4 +84,34 @@ export class ReviewOrderComponent implements OnInit {
   back(): void {
     this.router.navigate(['/new-order']);
   }
+
+  openPrint(): void {
+    if (!this.order) {
+      return;
+    }
+
+    const orderData = encodeURIComponent(
+      JSON.stringify(this.order)
+    );
+
+    window.open(
+      `http://localhost:4201/?order=${orderData}`,
+      '_blank'
+    );
+  }
+
+  openReport(): void {
+    if (!this.order) {
+      return;
+    }
+
+    const orderData = encodeURIComponent(
+      JSON.stringify(this.order)
+    );
+
+    window.open(
+      `http://localhost:4202/?order=${orderData}`,
+      '_blank'
+    );
+  }
 }
