@@ -1,0 +1,952 @@
+<main class="order-page"> 
+ 
+  <section class="order-window"> 
+ 
+    <!-- TOP BAR --> 
+    <div class="order-topbar"> 
+ 
+      <div class="title-line"> 
+        <h1>Sales Order</h1> 
+ 
+        <button 
+          class="check-link" 
+          type="button"> 
+          Check 
+        </button> 
+ 
+      </div> 
+ 
+      <div class="top-buttons"> 
+ 
+        <button 
+          type="button" 
+          (click)="save()"> 
+          Save 
+        </button> 
+ 
+        <button 
+          type="button" 
+          (click)="cancel()"> 
+          Cancel 
+        </button> 
+ 
+        <button 
+          type="button" 
+          (click)="add()"> 
+          Add 
+        </button> 
+ 
+        <button 
+          type="button" 
+          (click)="list()"> 
+          List 
+        </button> 
+ 
+        <button 
+          type="button" 
+          [class.authorized]="authorized" 
+          (click)="toggleAuthorize()"> 
+          {{ authorized ? 'Authorized' : 'Authorize' }} 
+        </button> 
+ 
+      </div> 
+ 
+    </div> 
+ 
+ 
+    <!-- TABS --> 
+    <div class="tabs"> 
+ 
+      <button 
+        type="button" 
+        class="tab active"> 
+        Main Fields 
+      </button> 
+ 
+      <button 
+        type="button" 
+        class="tab"> 
+        Additional Details 
+      </button> 
+ 
+      <span class="tab-arrow">▶</span> 
+ 
+    </div> 
+ 
+ 
+    <!-- MAIN FIELDS --> 
+    <section class="main-fields"> 
+ 
+      <!-- ROUTE PLAN --> 
+      <div class="route-row"> 
+ 
+        <label class="route-label"> 
+          Route Plan: 
+        </label> 
+ 
+        <select [(ngModel)]="routePlan"> 
+ 
+          <option value=""> 
+            Select Route Plan 
+          </option> 
+ 
+          @for (route of routePlans; track route) { 
+ 
+            <option [value]="route"> 
+              {{ route }} 
+            </option> 
+ 
+          } 
+ 
+        </select> 
+ 
+      </div> 
+ 
+ 
+      <!-- VOUCHER NUMBER / VOUCHER TYPE / DATE --> 
+      <div class="field-row"> 
+ 
+        <!-- VOUCHER NUMBER --> 
+        <label class="voucher-number-label"> 
+          Voucher Number 
+          <span>*</span> 
+        </label> 
+ 
+        <input 
+          class="voucher-number" 
+          type="text" 
+          [(ngModel)]="voucherNumber" 
+          placeholder="Voucher Number" 
+          readonly 
+        > 
+ 
+ 
+        <!-- VOUCHER TYPE --> 
+        <label class="voucher-label"> 
+          Voucher Type 
+          <span>*</span> 
+        </label> 
+ 
+        <div class="voucher-type-box"> 
+ 
+          <input 
+            class="voucher-input" 
+            type="text" 
+            [(ngModel)]="voucherType" 
+            placeholder="Voucher Type" 
+            readonly 
+          > 
+ 
+          <button 
+            type="button" 
+            class="ellipsis" 
+            (click)="openVoucherTypeSelector()"> 
+            ... 
+          </button> 
+ 
+          @if (showVoucherTypeSelector) { 
+ 
+            <div class="voucher-selector"> 
+ 
+              @for (type of voucherTypes; track type) { 
+ 
+                <button 
+                  type="button" 
+                  class="voucher-option" 
+                  (click)="selectVoucherType(type)"> 
+                  {{ type }} 
+                </button> 
+ 
+              } 
+ 
+            </div> 
+ 
+          } 
+ 
+        </div> 
+ 
+ 
+        <!-- DATE --> 
+        <label class="date-label"> 
+          Date 
+        </label> 
+ 
+        <input 
+          class="date-input" 
+          type="text" 
+          [(ngModel)]="date" 
+          placeholder="Date" 
+          readonly 
+        > 
+ 
+      </div> 
+ 
+ 
+      <!-- CUSTOMER --> 
+      <div class="customer-row"> 
+ 
+        <select [(ngModel)]="customer"> 
+ 
+          <option value=""> 
+            Select Customer 
+          </option> 
+ 
+          <option> 
+            Jannat Al Noor Trading 
+          </option> 
+ 
+          <option> 
+            EuroCloud Trading 
+          </option> 
+ 
+          <option> 
+            Al Noor Supplies 
+          </option> 
+ 
+        </select> 
+ 
+      </div> 
+ 
+    </section> 
+ 
+ 
+    <!-- ACCOUNT STRIP --> 
+    <section class="account-strip"> 
+ 
+      <div class="metric"> 
+ 
+        <strong> 
+          Balance 
+        </strong> 
+ 
+        <b> 
+          AED 3,250 
+        </b> 
+ 
+      </div> 
+ 
+      <div class="metric overdue"> 
+ 
+        <strong> 
+          Overdue 
+        </strong> 
+ 
+        <b> 
+          AED 750 
+        </b> 
+ 
+      </div> 
+ 
+      <div class="metric"> 
+ 
+        <strong> 
+          Last payment 
+        </strong> 
+ 
+        <b> 
+          12 Sep 
+        </b> 
+ 
+      </div> 
+ 
+      <div class="warning"> 
+ 
+        ⚠ 
+ 
+        <span> 
+          Overdue balance • Manager approval may be required 
+        </span> 
+ 
+      </div> 
+ 
+    </section> 
+ 
+ 
+    <!-- CATALOG TABS --> 
+    <section class="catalog-tabs"> 
+ 
+      <button 
+        type="button" 
+        class="catalog-tab selected"> 
+        Quick quantity 
+      </button> 
+ 
+      <button 
+        type="button" 
+        class="catalog-tab"> 
+        Category catalogue 
+      </button> 
+ 
+    </section> 
+ 
+ 
+    <!-- PRODUCT SELECTOR + SEARCH --> 
+    <section class="product-tools"> 
+ 
+      <div class="product-selector"> 
+ 
+        <label> 
+          Product: 
+        </label> 
+ 
+        <select 
+          [(ngModel)]="productCategory" 
+          (ngModelChange)="onProductCategoryChange()"> 
+ 
+          @for ( 
+            category of productCategories; 
+            track category 
+          ) { 
+ 
+            <option [value]="category"> 
+              {{ category }} 
+            </option> 
+ 
+          } 
+ 
+        </select> 
+ 
+      </div> 
+ 
+ 
+      <div class="product-search"> 
+ 
+        <label> 
+          Search: 
+        </label> 
+ 
+        <input 
+          type="text" 
+          [(ngModel)]="productSearch" 
+          (ngModelChange)="onProductSearchChange()" 
+          placeholder="Search product..." 
+        > 
+ 
+        <button 
+          type="button" 
+          class="catalogue-clear-btn" 
+          (click)="clearProductSearch()"> 
+          Clear 
+        </button> 
+ 
+      </div> 
+ 
+    </section> 
+ 
+ 
+    <!-- PRODUCT CATALOGUE --> 
+    <section
+      class="product-catalogue"
+      [class.all-products-view]="isFullWidthCatalogue"
+    > 
+ 
+      @for ( 
+        product of pagedProductCatalogue; 
+        track product.code 
+      ) { 
+ 
+        <button 
+          type="button" 
+          class="catalog-product" 
+          (click)="selectCatalogueProduct(product)"> 
+ 
+          <strong> 
+            {{ product.name }} 
+          </strong> 
+ 
+          <span> 
+            {{ product.code }} 
+          </span> 
+ 
+          <span> 
+            AED {{ product.spRate.toFixed(2) }} 
+          </span> 
+ 
+        </button> 
+ 
+      } 
+ 
+      @if ( 
+        pagedProductCatalogue.length === 0 
+      ) { 
+ 
+        <div class="empty-catalogue"> 
+ 
+          <span> 
+            No products found 
+          </span> 
+ 
+        </div> 
+ 
+      } 
+ 
+    </section> 
+ 
+ 
+    <!-- PRODUCT CATALOGUE PAGINATION --> 
+    <div class="catalog-pagination"> 
+ 
+      <button 
+        type="button" 
+        (click)="previousCataloguePage()" 
+        [disabled]="cataloguePage === 1"> 
+        ‹ 
+      </button> 
+ 
+      @for ( 
+        number of [].constructor(cataloguePageCount); 
+        track $index 
+      ) { 
+ 
+        <button 
+          type="button" 
+          class="catalog-page-number" 
+          [class.active]="cataloguePage === $index + 1" 
+          (click)="cataloguePage = $index + 1"> 
+ 
+          {{ $index + 1 }} 
+ 
+        </button> 
+ 
+      } 
+ 
+      <button 
+        type="button" 
+        (click)="nextCataloguePage()" 
+        [disabled]="cataloguePage === cataloguePageCount"> 
+        › 
+      </button> 
+ 
+    </div> 
+ 
+ 
+    <!-- PRODUCTS --> 
+    <section class="products"> 
+ 
+      <div class="product-header"> 
+ 
+        <div> 
+          Product Name 
+        </div> 
+ 
+        <div> 
+          Available Qty 
+        </div> 
+ 
+        <div> 
+          SP Rate 
+        </div> 
+ 
+        <div> 
+          Qty 
+        </div> 
+ 
+        <div> 
+          Order Rate 
+        </div> 
+ 
+        <div> 
+          Amount 
+        </div> 
+ 
+        <div></div> 
+ 
+      </div> 
+ 
+ 
+      @for ( 
+        product of products; 
+        track product.code 
+      ) { 
+ 
+        <div class="product-row"> 
+ 
+          <!-- PRODUCT --> 
+          <div class="product-info"> 
+ 
+            <strong> 
+              {{ product.name }} 
+            </strong> 
+ 
+            <small> 
+              Code: {{ product.code }} 
+            </small> 
+ 
+            <small> 
+              Size: {{ product.size }} 
+            </small> 
+ 
+          </div> 
+ 
+ 
+          <!-- AVAILABLE --> 
+          <div class="available"> 
+ 
+            <strong> 
+              {{ product.available }} pcs 
+            </strong> 
+ 
+            <small> 
+              available 
+            </small> 
+ 
+          </div> 
+ 
+ 
+          <!-- SP RATE --> 
+          <div class="rate"> 
+ 
+            <strong> 
+              AED {{ product.spRate.toFixed(2) }} 
+            </strong> 
+ 
+            <small> 
+              / pc 
+            </small> 
+ 
+          </div> 
+ 
+ 
+          <!-- QUANTITY --> 
+          <div class="stepper"> 
+ 
+            <button 
+              type="button" 
+              (click)="adjustQty(product, -1)"> 
+              − 
+            </button> 
+ 
+            <input 
+              type="number" 
+              min="1" 
+              [(ngModel)]="product.qty" 
+            > 
+ 
+            <button 
+              type="button" 
+              (click)="adjustQty(product, 1)"> 
+              + 
+            </button> 
+ 
+          </div> 
+ 
+ 
+          <!-- ORDER RATE --> 
+          <div class="stepper"> 
+ 
+            <button 
+              type="button" 
+              (click)="adjustRate(product, -1)"> 
+              − 
+            </button> 
+ 
+            <input 
+              type="number" 
+              min="0" 
+              [(ngModel)]="product.orderRate" 
+            > 
+ 
+            <button 
+              type="button" 
+              (click)="adjustRate(product, 1)"> 
+              + 
+            </button> 
+ 
+          </div> 
+ 
+ 
+          <!-- AMOUNT --> 
+          <div class="amount"> 
+            AED {{ amount(product).toFixed(2) }} 
+          </div> 
+ 
+ 
+          <!-- DELETE --> 
+          <button 
+            class="delete" 
+            type="button" 
+            (click)="deleteProduct(product)" 
+            aria-label="Delete product"> 
+            🗑 
+          </button> 
+ 
+        </div> 
+ 
+      } 
+ 
+ 
+      @if (products.length === 0) { 
+ 
+        <div class="empty-products"> 
+ 
+          <span> 
+            No products added 
+          </span> 
+ 
+        </div> 
+ 
+      } 
+ 
+    </section> 
+ 
+ 
+    <!-- BOTTOM AREA --> 
+    <section class="bottom-area"> 
+ 
+      <div class="delivery-notes"> 
+ 
+        <!-- DELIVERY DATE --> 
+        <div class="delivery"> 
+ 
+          <label> 
+            Delivery date 
+          </label> 
+ 
+          <input 
+            type="date" 
+            [(ngModel)]="deliveryDate" 
+          > 
+ 
+        </div> 
+ 
+ 
+        <!-- NOTES --> 
+        <div class="notes"> 
+ 
+          <label> 
+            Notes (optional) 
+          </label> 
+ 
+          <input 
+            [(ngModel)]="notes" 
+            placeholder="Add order notes..." 
+          > 
+ 
+        </div> 
+ 
+      </div> 
+ 
+ 
+      <!-- TOTALS --> 
+      <div class="totals"> 
+ 
+        <div class="total-item"> 
+ 
+          <span> 
+            Subtotal 
+          </span> 
+ 
+          <strong> 
+            AED {{ subtotal.toFixed(2) }} 
+          </strong> 
+ 
+        </div> 
+ 
+ 
+        <div class="total-item"> 
+ 
+          <span> 
+            VAT (5%) 
+          </span> 
+ 
+          <strong> 
+            AED {{ vat.toFixed(2) }} 
+          </strong> 
+ 
+        </div> 
+ 
+ 
+        <div class="total-item total"> 
+ 
+          <span> 
+            Total 
+          </span> 
+ 
+          <strong> 
+            AED {{ total.toFixed(2) }} 
+          </strong> 
+ 
+        </div> 
+ 
+ 
+        <!-- ACTIONS --> 
+        <div class="order-actions"> 
+ 
+          <button 
+            type="button" 
+            class="draft" 
+            (click)="draft()"> 
+            Save draft 
+          </button> 
+ 
+          <button 
+            type="button" 
+            class="review" 
+            (click)="review()"> 
+            Review order 
+          </button> 
+ 
+        </div> 
+ 
+      </div> 
+ 
+    </section> 
+ 
+  </section> 
+ 
+ 
+  <!-- EXISTING SALES ORDER LIST MODAL --> 
+ 
+  @if (showList) { 
+ 
+    <div 
+      class="modal-backdrop" 
+      (click)="closeList()"> 
+ 
+      <section 
+        class="list-modal" 
+        (click)="$event.stopPropagation()"> 
+ 
+        <button 
+          class="modal-close" 
+          type="button" 
+          (click)="closeList()"> 
+          × 
+        </button> 
+ 
+ 
+        <div class="list-toolbar"> 
+ 
+          <div class="search-box"> 
+ 
+            <span>⌕</span> 
+ 
+            <input 
+              [(ngModel)]="search" 
+              (ngModelChange)="page = 1" 
+              placeholder="Search..." 
+            /> 
+ 
+          </div> 
+ 
+          <button 
+            class="back-button" 
+            type="button" 
+            (click)="closeList()"> 
+            Back 
+          </button> 
+ 
+        </div> 
+ 
+ 
+        <div class="list-panel"> 
+ 
+          <div class="list-title"> 
+            Sales Order List 
+          </div> 
+ 
+          <div class="table-wrap"> 
+ 
+            <table> 
+ 
+              <thead> 
+ 
+                <tr> 
+                  <th>Voucher Type<br>No</th> 
+                  <th>Voucher Type<br>Name</th> 
+                  <th>Date</th> 
+                  <th>Customer</th> 
+                  <th>Amount</th> 
+                  <th>Status</th> 
+                  <th>Actions</th> 
+                </tr> 
+ 
+              </thead> 
+ 
+              <tbody> 
+ 
+                @for ( 
+                  order of pagedOrders; 
+                  track order.id 
+                ) { 
+ 
+                  <tr> 
+ 
+                    <td> 
+                      {{ order.voucherNumber }} 
+                    </td> 
+ 
+                    <td> 
+                      {{ order.voucherType }} 
+                    </td> 
+ 
+                    <td> 
+                      {{ order.date }} 
+                    </td> 
+ 
+                    <td> 
+                      {{ order.customer }} 
+                    </td> 
+ 
+                    <td class="amount-cell"> 
+                      AED {{ order.items.reduce(amountForItems, 0).toFixed(2) }} 
+                    </td> 
+ 
+                    <td> 
+ 
+                      <span 
+                        class="status" 
+                        [class.approved]="order.status === 'Approved'"> 
+                        {{ order.status }} 
+                      </span> 
+ 
+                    </td> 
+ 
+                    <td> 
+ 
+                      <button 
+                        class="row-edit" 
+                        type="button" 
+                        (click)="editOrder(order)"> 
+                        ✎ Edit 
+                      </button> 
+ 
+                    </td> 
+ 
+                  </tr> 
+ 
+                } 
+ 
+                @empty { 
+ 
+                  <tr> 
+ 
+                    <td 
+                      colspan="7" 
+                      class="empty"> 
+                      No orders found. 
+                    </td> 
+ 
+                  </tr> 
+ 
+                } 
+ 
+              </tbody> 
+ 
+            </table> 
+ 
+          </div> 
+ 
+ 
+          <div class="pagination"> 
+ 
+            <button 
+              type="button" 
+              (click)="firstPage()" 
+              [disabled]="page === 1"> 
+              « 
+            </button> 
+ 
+            <button 
+              type="button" 
+              (click)="previousPage()" 
+              [disabled]="page === 1"> 
+              ‹ 
+            </button> 
+ 
+            @for ( 
+              number of [1,2,3,4,5]; 
+              track number 
+            ) { 
+ 
+              @if (number <= pageCount) { 
+ 
+                <button 
+                  type="button" 
+                  class="page-number" 
+                  [class.active]="page === number" 
+                  (click)="page = number"> 
+                  {{ number }} 
+                </button> 
+ 
+              } 
+ 
+            } 
+ 
+            <button 
+              type="button" 
+              (click)="nextPage()" 
+              [disabled]="page === pageCount"> 
+              › 
+            </button> 
+ 
+            <button 
+              type="button" 
+              (click)="lastPage()" 
+              [disabled]="page === pageCount"> 
+              »</button> 
+ 
+            <span class="page-size"> 
+              {{ pageSize }}⌄ 
+            </span> 
+ 
+          </div> 
+ 
+        </div> 
+ 
+      </section> 
+ 
+    </div> 
+ 
+  } 
+ 
+ 
+  <!-- SAVE SUCCESS MODAL --> 
+ 
+  @if (showSaveSuccess) { 
+ 
+    <div class="success-overlay"> 
+ 
+      <div class="success-modal"> 
+ 
+        <button 
+          class="success-close" 
+          type="button" 
+          (click)="closeSaveSuccess()"> 
+          × 
+        </button> 
+ 
+        <div class="success-icon"> 
+          ✓ 
+        </div> 
+ 
+        <h2> 
+          Saved Successfully 
+        </h2> 
+ 
+        <p> 
+ 
+          Sales Order 
+ 
+          <strong> 
+            {{ savedOrderNumber }} 
+          </strong> 
+ 
+          has been saved successfully. 
+ 
+        </p> 
+ 
+        <button 
+          class="success-ok" 
+          type="button" 
+          (click)="closeSaveSuccess()"> 
+          OK 
+        </button> 
+ 
+      </div> 
+ 
+    </div> 
+ 
+  } 
+ 
+</main>

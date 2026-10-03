@@ -1,0 +1,65 @@
+<main class="sales-page">
+  <section class="sales-shell">
+    <div class="sales-heading">
+      <h1>Sales Order</h1>
+      <div class="heading-actions">
+        <button class="top-action" type="button" (click)="newOrder()">Add <span>+</span></button>
+        <button class="top-action" type="button" (click)="openList()">List <span class="list-glyph">☷</span></button>
+      </div>
+    </div>
+
+    <div class="tiles-frame">
+      <div class="tile-grid top-row">
+        <button class="sales-tile" type="button" (click)="newOrder()"><span class="icon-circle"><svg viewBox="0 0 48 48"><path d="M14 6h14l8 8v28H14z" fill="none" stroke="currentColor" stroke-width="3"/><path d="M28 6v10h8M24 20v12M18 26h12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span><span class="tile-label">New Order</span></button>
+        <button class="sales-tile" type="button" (click)="openList()"><span class="icon-circle"><svg viewBox="0 0 48 48"><circle cx="10" cy="12" r="2.5" fill="currentColor"/><circle cx="10" cy="24" r="2.5" fill="currentColor"/><circle cx="10" cy="36" r="2.5" fill="currentColor"/><path d="M18 12h20M18 24h20M18 36h20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span><span class="tile-label">My Orders</span></button>
+        <button class="sales-tile" type="button" (click)="working()"><span class="icon-circle"><svg viewBox="0 0 48 48"><path d="M10 38V28M20 38V20M30 38V12M40 38V6" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg></span><span class="tile-label">My Sales</span></button>
+      </div>
+      <div class="tile-grid bottom-row">
+        <button class="sales-tile" type="button" (click)="working()"><span class="icon-circle"><svg viewBox="0 0 48 48"><path d="M14 6h14l8 8v28H14z" fill="none" stroke="currentColor" stroke-width="3"/><path d="M28 6v10h8M24 20v12M18 26h12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span><span class="tile-label">New Receipt</span></button>
+        <button class="sales-tile" type="button" (click)="working()"><span class="icon-circle"><svg viewBox="0 0 64 48"><path d="M6 13h34v24H6zM40 21h10l8 8v8H40z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><circle cx="18" cy="40" r="4" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="48" cy="40" r="4" fill="none" stroke="currentColor" stroke-width="3"/></svg></span><span class="tile-label">Deliveries</span></button>
+      </div>
+    </div>
+  </section>
+
+  @if (showList) {
+    <div class="modal-backdrop" (click)="closeList()">
+      <section class="list-modal" (click)="$event.stopPropagation()">
+        <button class="modal-close" type="button" (click)="closeList()">×</button>
+        <div class="list-toolbar">
+          <div class="search-box"><span>⌕</span><input [(ngModel)]="search" (ngModelChange)="page = 1" placeholder="Search..." /></div>
+          <button class="back-button" type="button" (click)="closeList()">Back</button>
+        </div>
+
+        <div class="list-panel">
+          <div class="list-title">Sales Order List</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Voucher Type<br>No</th><th>Voucher Type<br>Name</th><th>Date</th><th>Customer</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody>
+                @for (order of pagedOrders; track order.id) {
+                  <tr>
+                    <td>{{ order.voucherNumber }}</td><td>{{ order.voucherType }}</td><td>{{ order.date }}</td><td>{{ order.customer }}</td><td class="amount-cell">AED {{ order.items.reduce(amountForItems, 0).toFixed(2) }}</td>
+                    <td><span class="status" [class.approved]="order.status === 'Approved'">{{ order.status }}</span></td>
+                    <td><button class="row-edit" type="button" (click)="editOrder(order)">✎ Edit</button></td>
+                  </tr>
+                } @empty {
+                  <tr><td colspan="7" class="empty">No orders found.</td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <button (click)="firstPage()" [disabled]="page === 1">«</button>
+            <button (click)="previousPage()" [disabled]="page === 1">‹</button>
+            @for (number of [1,2,3,4,5]; track number) {
+              @if (number <= pageCount) { <button class="page-number" [class.active]="page === number" (click)="page = number">{{ number }}</button> }
+            }
+            <button (click)="nextPage()" [disabled]="page === pageCount">›</button>
+            <button (click)="lastPage()" [disabled]="page === pageCount">»</button>
+            <span class="page-size">{{ pageSize }}⌄</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  }
+</main>

@@ -1,0 +1,353 @@
+* {
+  box-sizing: border-box;
+}
+
+.review-page {
+  min-height: 100vh;
+  background: #cae4f3;
+  padding: 8px;
+  color: #162534;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.review-window {
+  min-height: calc(100vh - 16px);
+  background: #ffffff;
+  border: 1px solid #9eb8c8;
+  padding: 14px;
+}
+
+
+/* HEADER */
+
+.review-header {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #7899ad;
+  margin-bottom: 12px;
+}
+
+.review-header h1 {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 20px;
+  color: #143b67;
+}
+
+.review-header span {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+  color: #536979;
+}
+
+.header-number {
+  min-width: 120px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 700;
+  color: #143b67;
+}
+
+
+/* SECTIONS */
+
+.details-section,
+.products-section {
+  margin-bottom: 14px;
+}
+
+.section-title {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  padding: 0 9px;
+  background: #e8f4fa;
+  border: 1px solid #b5cfdd;
+  color: #143b67;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* DETAILS */
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-left: 1px solid #c4d3dc;
+  border-bottom: 1px solid #c4d3dc;
+}
+
+.detail {
+  min-height: 55px;
+  padding: 8px 10px;
+  border-right: 1px solid #c4d3dc;
+  border-bottom: 1px solid #c4d3dc;
+  background: #fff;
+}
+
+.detail label,
+.account-detail label {
+  display: block;
+  margin-bottom: 5px;
+  color: #687b88;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.detail strong,
+.account-detail strong {
+  display: block;
+  color: #172a39;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* STATUS */
+
+.status {
+  color: #a46a00 !important;
+}
+
+.status.approved {
+  color: #19713a !important;
+}
+
+
+/* ACCOUNT */
+
+.account-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-left: 1px solid #c4d3dc;
+  border-bottom: 1px solid #c4d3dc;
+}
+
+.account-detail {
+  min-height: 55px;
+  padding: 8px 10px;
+  border-right: 1px solid #c4d3dc;
+  background: #fff;
+}
+
+.account-detail strong {
+  font-size: 13px;
+}
+
+
+/* PRODUCT TABLE */
+
+.table-wrapper {
+  overflow-x: auto;
+  border-left: 1px solid #b7cad6;
+  border-right: 1px solid #b7cad6;
+  border-bottom: 1px solid #b7cad6;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+thead {
+  background: #d9edf7;
+}
+
+th {
+  height: 34px;
+  padding: 5px 7px;
+  border-right: 1px solid #b7cad6;
+  border-bottom: 1px solid #9fb9c8;
+  color: #263f50;
+  font-size: 10px;
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+}
+
+td {
+  min-height: 34px;
+  padding: 7px;
+  border-right: 1px solid #d0dce3;
+  border-bottom: 1px solid #d0dce3;
+  color: #273744;
+  background: #fff;
+}
+
+tbody tr:nth-child(even) td {
+  background: #f8fbfd;
+}
+
+td.amount {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.empty {
+  padding: 20px;
+  text-align: center;
+  color: #738592;
+}
+
+
+/* ADDITIONAL */
+
+.additional-grid {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  border-left: 1px solid #c4d3dc;
+  border-bottom: 1px solid #c4d3dc;
+}
+
+.notes-detail {
+  min-height: 55px;
+}
+
+
+/* BILL */
+
+.bill-section {
+  width: 360px;
+  margin-left: auto;
+  margin-top: 10px;
+  border: 1px solid #aebfca;
+  background: #fff;
+}
+
+.bill-row {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  border-bottom: 1px solid #d6e0e5;
+  font-size: 12px;
+}
+
+.bill-row strong {
+  font-size: 12px;
+}
+
+.total-row {
+  min-height: 45px;
+  background: #e8f4fa;
+  border-bottom: 0;
+  color: #0b4b8f;
+  font-size: 14px;
+}
+
+.total-row strong {
+  font-size: 16px;
+}
+
+
+/* ACTIONS */
+
+.review-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.review-actions button {
+  min-width: 90px;
+  height: 30px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.back-button {
+  border: 1px solid #a48b74;
+  background: #f9ead9;
+  color: #111;
+}
+
+.save-button {
+  border: 1px solid #0870df;
+  background: #0870df;
+  color: #fff;
+}
+
+
+/* SAVE MESSAGE */
+
+.saved-message {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border: 1px solid #a9d3b5;
+  background: #edf9f0;
+  color: #21713a;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: right;
+}
+
+
+/* NO ORDER */
+
+.no-order {
+  padding: 35px;
+  text-align: center;
+  color: #667985;
+  font-size: 13px;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+
+  .details-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .account-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .additional-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bill-section {
+    width: 100%;
+    max-width: 360px;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .review-page {
+    padding: 4px;
+  }
+
+  .review-window {
+    padding: 8px;
+  }
+
+  .details-grid,
+  .account-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .review-header {
+    align-items: flex-start;
+  }
+
+  .header-number {
+    min-width: auto;
+  }
+
+  .bill-section {
+    max-width: none;
+  }
+}

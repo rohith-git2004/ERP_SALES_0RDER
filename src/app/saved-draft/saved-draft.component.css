@@ -1,0 +1,292 @@
+* {
+  box-sizing: border-box;
+}
+
+.draft-page {
+  min-height: 100vh;
+  background: #c9e7f7;
+  padding: 32px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.draft-window {
+  width: 100%;
+  max-width: 1250px;
+  margin: 0 auto;
+  background: #eef9ff;
+  border: 1px solid #9ccfe8;
+  border-radius: 8px;
+  padding: 30px;
+  min-height: 620px;
+}
+
+/* HEADER */
+
+.draft-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.draft-header h1 {
+  margin: 0;
+  color: #064b91;
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.draft-header p {
+  margin: 10px 0 0;
+  color: #416684;
+  font-size: 18px;
+}
+
+/* ADD BUTTON */
+
+.add-btn {
+  min-width: 110px;
+  height: 44px;
+  padding: 0 20px;
+  border: 1px solid #e1ad20;
+  border-radius: 6px;
+  background: #fff9e9;
+  color: #064b91;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background: #fff1c7;
+}
+
+/* CONTROLS */
+
+.list-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.search-box {
+  width: 360px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #a9c9db;
+  border-radius: 5px;
+}
+
+.search-icon {
+  width: 42px;
+  text-align: center;
+  font-size: 23px;
+  color: #53748c;
+}
+
+.search-box input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  color: #333;
+  background: transparent;
+}
+
+.search-box input::placeholder {
+  color: #8a9eab;
+}
+
+.back-small {
+  height: 42px;
+  padding: 0 22px;
+  border: 1px solid #9bb9ca;
+  border-radius: 5px;
+  background: white;
+  color: #164f78;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.back-small:hover {
+  background: #edf7fc;
+}
+
+/* TABLE */
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  background: white;
+  border: 1px solid #a9c9db;
+  border-radius: 6px;
+}
+
+.draft-table {
+  width: 100%;
+  min-width: 1000px;
+  border-collapse: collapse;
+}
+
+.draft-table thead {
+  background: #07569a;
+}
+
+.draft-table th {
+  padding: 15px 13px;
+  text-align: left;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.draft-table th:last-child {
+  border-right: none;
+}
+
+.draft-table tbody tr {
+  border-bottom: 1px solid #d7e4eb;
+}
+
+.draft-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.draft-table tbody tr:hover {
+  background: #f4fbff;
+}
+
+.draft-table td {
+  padding: 15px 13px;
+  color: #263f50;
+  font-size: 14px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.draft-table td strong {
+  color: #153f60;
+}
+
+/* STATUS */
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 78px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #fff3d5;
+  border: 1px solid #e5bd55;
+  color: #8a6100;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* EDIT */
+
+.edit-btn {
+  min-width: 76px;
+  height: 34px;
+  padding: 0 15px;
+  border: 1px solid #dcae27;
+  border-radius: 5px;
+  background: #fff8e5;
+  color: #064b91;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.edit-btn:hover {
+  background: #ffefbf;
+}
+
+/* FOOTER */
+
+.list-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding: 0 5px;
+  color: #527187;
+  font-size: 14px;
+}
+
+/* EMPTY STATE */
+
+.empty-list {
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 1px solid #a9c9db;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.empty-list h2 {
+  margin: 5px 0;
+  color: #164f78;
+}
+
+.empty-list p {
+  margin: 5px 0 20px;
+  color: #6a8191;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 800px) {
+
+  .draft-page {
+    padding: 15px;
+  }
+
+  .draft-window {
+    padding: 20px;
+  }
+
+  .draft-header {
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .draft-header h1 {
+    font-size: 28px;
+  }
+
+  .draft-header p {
+    font-size: 15px;
+  }
+
+  .list-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .back-small {
+    width: 100%;
+  }
+
+}

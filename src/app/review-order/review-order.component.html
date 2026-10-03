@@ -1,0 +1,347 @@
+<main class="review-page">
+
+  <section class="review-window">
+
+    <!-- HEADER -->
+    <div class="review-header">
+
+      <div>
+        <h1>Sales Order</h1>
+        <span>Review Order</span>
+      </div>
+
+      <div class="header-actions">
+
+        @if (order) {
+          <div class="header-number">
+            {{ order.voucherNumber || '-' }}
+          </div>
+        }
+
+        <button
+          type="button"
+          class="top-back-button"
+          (click)="back()">
+          Back
+        </button>
+
+      </div>
+
+    </div>
+
+
+    @if (order) {
+
+      <!-- ORDER DETAILS -->
+      <section class="details-section">
+
+        <div class="section-title">
+          Order Details
+        </div>
+
+        <div class="details-grid">
+
+          <div class="detail">
+            <label>Voucher Number</label>
+            <strong>
+              {{ order.voucherNumber || '-' }}
+            </strong>
+          </div>
+
+          <div class="detail">
+            <label>Voucher Type</label>
+            <strong>
+              {{ order.voucherType || '-' }}
+            </strong>
+          </div>
+
+          <div class="detail">
+            <label>Route Plan</label>
+            <strong>
+              {{ order.routePlan || '-' }}
+            </strong>
+          </div>
+
+          <div class="detail">
+            <label>Date</label>
+            <strong>
+              {{ order.date || '-' }}
+            </strong>
+          </div>
+
+          <div class="detail">
+            <label>Customer</label>
+            <strong>
+              {{ order.customer || '-' }}
+            </strong>
+          </div>
+
+          <div class="detail">
+            <label>Status</label>
+
+            <strong
+              class="status"
+              [class.approved]="order.authorized">
+              {{ getStatus() }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ACCOUNT DETAILS -->
+      <section class="details-section">
+
+        <div class="section-title">
+          Account Details
+        </div>
+
+        <div class="account-grid">
+
+          <div class="account-detail">
+            <label>Balance</label>
+            <strong>
+              AED {{ order.balance.toFixed(2) }}
+            </strong>
+          </div>
+
+          <div class="account-detail">
+            <label>Overdue</label>
+            <strong>
+              AED {{ order.overdue.toFixed(2) }}
+            </strong>
+          </div>
+
+          <div class="account-detail">
+            <label>Last Payment</label>
+            <strong>
+              {{ order.lastPayment || '-' }}
+            </strong>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- PRODUCT DETAILS -->
+      <section class="products-section">
+
+        <div class="section-title">
+          Product Details
+        </div>
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Product Name</th>
+                <th>Code</th>
+                <th>Size</th>
+                <th>Available Qty</th>
+                <th>SP Rate</th>
+                <th>Qty</th>
+                <th>Order Rate</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              @for (
+                product of order.items;
+                track product.code;
+                let i = $index
+              ) {
+
+                <tr>
+
+                  <td>
+                    {{ i + 1 }}
+                  </td>
+
+                  <td>
+                    <strong>
+                      {{ product.name }}
+                    </strong>
+                  </td>
+
+                  <td>
+                    {{ product.code }}
+                  </td>
+
+                  <td>
+                    {{ product.size }}
+                  </td>
+
+                  <td>
+                    {{ product.available }}
+                  </td>
+
+                  <td>
+                    AED {{ product.spRate.toFixed(2) }}
+                  </td>
+
+                  <td>
+                    <strong>
+                      {{ product.qty }}
+                    </strong>
+                  </td>
+
+                  <td>
+                    AED {{ product.orderRate.toFixed(2) }}
+                  </td>
+
+                  <td class="amount">
+                    AED
+                    {{
+                      getItemAmount(
+                        product.qty,
+                        product.orderRate
+                      ).toFixed(2)
+                    }}
+                  </td>
+
+                </tr>
+
+              }
+
+              @if (order.items.length === 0) {
+
+                <tr>
+                  <td
+                    colspan="9"
+                    class="empty">
+                    No products added.
+                  </td>
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+
+      <!-- DELIVERY / NOTES -->
+      <section class="details-section">
+
+        <div class="section-title">
+          Additional Details
+        </div>
+
+        <div class="additional-grid">
+
+          <div class="detail">
+
+            <label>
+              Delivery Date
+            </label>
+
+            <strong>
+              {{ order.deliveryDate || '-' }}
+            </strong>
+
+          </div>
+
+          <div class="detail notes-detail">
+
+            <label>
+              Notes
+            </label>
+
+            <strong>
+              {{ order.notes || '-' }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- TOTAL BILL -->
+      <section class="bill-section">
+
+        <div class="bill-row">
+
+          <span>
+            Subtotal
+          </span>
+
+          <strong>
+            AED {{ subtotal.toFixed(2) }}
+          </strong>
+
+        </div>
+
+        <div class="bill-row">
+
+          <span>
+            VAT (5%)
+          </span>
+
+          <strong>
+            AED {{ vat.toFixed(2) }}
+          </strong>
+
+        </div>
+
+        <div class="bill-row total-row">
+
+          <span>
+            Total
+          </span>
+
+          <strong>
+            AED {{ totalAmount.toFixed(2) }}
+          </strong>
+
+        </div>
+
+      </section>
+
+
+      <!-- ACTIONS -->
+      <div class="review-actions">
+
+        <button
+          type="button"
+          class="save-button"
+          (click)="save()">
+          Save
+        </button>
+
+      </div>
+
+
+      @if (saved) {
+
+        <div class="saved-message">
+          Sales Order saved successfully.
+        </div>
+
+      }
+
+    } @else {
+
+      <div class="no-order">
+        No order details available.
+      </div>
+
+    }
+
+  </section>
+
+</main>

@@ -1,0 +1,142 @@
+<main class="draft-page">
+
+  <section class="draft-window">
+
+    <!-- Header -->
+    <div class="draft-header">
+      <div>
+        <h1>Saved Drafts</h1>
+        <p>Sales Order drafts have been saved.</p>
+      </div>
+
+      <button class="add-btn" (click)="createNew()">
+        + Add
+      </button>
+    </div>
+
+    <!-- Search / list controls -->
+    <div class="list-controls">
+
+      <div class="search-box">
+        <span class="search-icon">⌕</span>
+        <input
+          type="text"
+          placeholder="Search orders..."
+        />
+      </div>
+
+      <button class="back-small" (click)="back()">
+        Back
+      </button>
+
+    </div>
+
+    <!-- Draft List -->
+    @if (drafts.length > 0) {
+
+      <div class="table-wrapper">
+
+        <table class="draft-table">
+
+          <thead>
+            <tr>
+              <th>Order No.</th>
+              <th>Voucher Number</th>
+              <th>Customer</th>
+              <th>Route Plan</th>
+              <th>Date</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            @for (draft of drafts; track draft.id) {
+
+              <tr>
+
+                <td>
+                  <strong>{{ draft.id }}</strong>
+                </td>
+
+                <td>
+                  {{ draft.voucherNumber }}
+                </td>
+
+                <td>
+                  {{ draft.customer }}
+                </td>
+
+                <td>
+                  {{ draft.routePlan }}
+                </td>
+
+                <td>
+                  {{ draft.date }}
+                </td>
+
+                <td>
+                  <strong>
+                    AED {{ getTotal(draft).toFixed(2) }}
+                  </strong>
+                </td>
+
+                <td>
+                  <span class="status">
+                    {{ draft.status }}
+                  </span>
+                </td>
+
+                <td>
+                  <button
+                    class="edit-btn"
+                    type="button"
+                    (click)="edit(draft)"
+                  >
+                    Edit
+                  </button>
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <!-- Bottom information -->
+      <div class="list-footer">
+        <span>
+          Showing {{ drafts.length }} saved draft(s)
+        </span>
+      </div>
+
+    } @else {
+
+      <div class="empty-list">
+        <div class="empty-icon">📄</div>
+
+        <h2>No Saved Drafts</h2>
+
+        <p>
+          There are no saved sales order drafts.
+        </p>
+
+        <button
+          class="add-btn"
+          (click)="createNew()"
+        >
+          + Create New Order
+        </button>
+      </div>
+
+    }
+
+  </section>
+
+</main>
