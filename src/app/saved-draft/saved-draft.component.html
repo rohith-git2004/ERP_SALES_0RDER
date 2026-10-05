@@ -9,7 +9,11 @@
         <p>Sales Order drafts have been saved.</p>
       </div>
 
-      <button class="add-btn" (click)="createNew()">
+      <button
+        class="add-btn"
+        type="button"
+        (click)="createNew()"
+      >
         + Add
       </button>
     </div>
@@ -19,13 +23,18 @@
 
       <div class="search-box">
         <span class="search-icon">⌕</span>
+
         <input
           type="text"
           placeholder="Search orders..."
         />
       </div>
 
-      <button class="back-small" (click)="back()">
+      <button
+        class="back-small"
+        type="button"
+        (click)="back()"
+      >
         Back
       </button>
 
@@ -89,7 +98,8 @@
                   </span>
                 </td>
 
-                <td>
+                <td class="action-cell">
+
                   <button
                     class="edit-btn"
                     type="button"
@@ -97,6 +107,15 @@
                   >
                     Edit
                   </button>
+
+                  <button
+                    class="delete-btn"
+                    type="button"
+                    (click)="deleteDraft(draft)"
+                  >
+                    Delete
+                  </button>
+
                 </td>
 
               </tr>
@@ -111,14 +130,17 @@
 
       <!-- Bottom information -->
       <div class="list-footer">
+
         <span>
           Showing {{ drafts.length }} saved draft(s)
         </span>
+
       </div>
 
     } @else {
 
       <div class="empty-list">
+
         <div class="empty-icon">📄</div>
 
         <h2>No Saved Drafts</h2>
@@ -129,10 +151,12 @@
 
         <button
           class="add-btn"
+          type="button"
           (click)="createNew()"
         >
           + Create New Order
         </button>
+
       </div>
 
     }
@@ -140,3 +164,57 @@
   </section>
 
 </main>
+
+<!-- Delete Confirmation Modal -->
+@if (showDeleteModal) {
+
+  <div
+    class="delete-modal-overlay"
+    (click)="closeDeleteModal()"
+  >
+
+    <div
+      class="delete-modal"
+      (click)="$event.stopPropagation()"
+    >
+
+      <div class="delete-modal-icon">
+        !
+      </div>
+
+      <h2>Delete Draft?</h2>
+
+      <p>
+        Are you sure you want to permanently delete
+        <strong>{{ draftToDelete?.id }}</strong>?
+      </p>
+
+      <p class="delete-warning">
+        This action cannot be undone.
+      </p>
+
+      <div class="delete-modal-actions">
+
+        <button
+          type="button"
+          class="cancel-delete-btn"
+          (click)="closeDeleteModal()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="confirm-delete-btn"
+          (click)="confirmDeleteDraft()"
+        >
+          Delete
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+}

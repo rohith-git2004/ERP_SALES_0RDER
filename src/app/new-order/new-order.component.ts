@@ -39,10 +39,6 @@ export class NewOrderComponent implements OnInit {
 
   productCatalogue: CatalogueProduct[] = [
 
-    /* =========================================
-       EXISTING PRODUCTS - KEEPING ORIGINAL CODES
-       ========================================= */
-
     {
       name: 'PVC Trunking 16 x 16',
       code: 'PVC1616',
@@ -94,10 +90,6 @@ export class NewOrderComponent implements OnInit {
       orderRate: 55
     },
 
-    /* =========================================
-       PVC TRUNKING
-       ========================================= */
-
     {
       name: 'PVC Trunking 20 x 20',
       code: 'PVC2020',
@@ -138,10 +130,6 @@ export class NewOrderComponent implements OnInit {
       qty: 1,
       orderRate: 16
     },
-
-    /* =========================================
-       PANTS
-       ========================================= */
 
     {
       name: 'Formal Pants',
@@ -193,10 +181,6 @@ export class NewOrderComponent implements OnInit {
       qty: 1,
       orderRate: 38
     },
-
-    /* =========================================
-       SHIRT
-       ========================================= */
 
     {
       name: 'Formal Shirt',
@@ -299,10 +283,6 @@ export class NewOrderComponent implements OnInit {
       orderRate: 39
     },
 
-    /* =========================================
-       T-SHIRT
-       ========================================= */
-
     {
       name: 'Round Neck T-Shirt',
       code: 'TSH1005',
@@ -353,10 +333,6 @@ export class NewOrderComponent implements OnInit {
       qty: 1,
       orderRate: 31
     },
-
-    /* =========================================
-       SHOES
-       ========================================= */
 
     {
       name: 'Formal Shoes',
@@ -409,10 +385,6 @@ export class NewOrderComponent implements OnInit {
       orderRate: 40
     },
 
-    /* =========================================
-       LED BULB
-       ========================================= */
-
     {
       name: 'LED Bulb 5W',
       code: 'LED1001',
@@ -454,10 +426,6 @@ export class NewOrderComponent implements OnInit {
       orderRate: 12
     },
 
-    /* =========================================
-       SWITCH
-       ========================================= */
-
     {
       name: '1-Way Switch',
       code: 'SW1001',
@@ -489,10 +457,6 @@ export class NewOrderComponent implements OnInit {
       orderRate: 10
     },
 
-    /* =========================================
-       SOCKET
-       ========================================= */
-
     {
       name: '5A Socket',
       code: 'SOC1001',
@@ -523,10 +487,6 @@ export class NewOrderComponent implements OnInit {
       qty: 1,
       orderRate: 15
     },
-
-    /* =========================================
-       MCB
-       ========================================= */
 
     {
       name: 'MCB 6A',
@@ -579,10 +539,6 @@ export class NewOrderComponent implements OnInit {
       orderRate: 24
     },
 
-    /* =========================================
-       CABLE
-       ========================================= */
-
     {
       name: '1.5mm Cable',
       code: 'CAB1001',
@@ -624,10 +580,6 @@ export class NewOrderComponent implements OnInit {
       orderRate: 130
     },
 
-    /* =========================================
-       LED PANEL
-       ========================================= */
-
     {
       name: 'LED Panel 6W',
       code: 'PANEL1001',
@@ -668,10 +620,6 @@ export class NewOrderComponent implements OnInit {
       qty: 1,
       orderRate: 40
     },
-
-    /* =========================================
-       NUTS & BOLTS
-       ========================================= */
 
     {
       name: 'Hex Nut M4',
@@ -845,11 +793,10 @@ export class NewOrderComponent implements OnInit {
     }
   ];
 
-  /*
-   * Selected products.
-   * Initially empty because products should appear here
-   * only after selecting them from the catalogue.
-   */
+  /* =========================================
+     SELECTED PRODUCTS
+     ========================================= */
+
   products: OrderItem[] = [];
 
   /* =========================================
@@ -899,31 +846,32 @@ export class NewOrderComponent implements OnInit {
   page = 1;
   pageSize = 5;
 
+  /* =========================================
+     DELETE CONFIRMATION MODAL
+     ========================================= */
+
+  showDeleteModal = false;
+  orderToDelete: SalesOrder | null = null;
+
+  /* =========================================
+     SAVE DRAFT SUCCESS POPUP
+     ========================================= */
+
+  showDraftSuccess = false;
+  savedDraftNumber = '';
+
   constructor(
     private router: Router,
     private store: OrderStoreService
   ) {}
 
   ngOnInit(): void {
-
-    const current =
-      this.store.getCurrent();
+    const current = this.store.getCurrent();
 
     if (current) {
-
       this.loadOrder(current);
-
     } else {
-
-      /*
-       * New Order automatically receives
-       * the current system date.
-       *
-       * Format:
-       * DD-MM-YYYY
-       */
-      this.date =
-        this.getCurrentSystemDate();
+      this.date = this.getCurrentSystemDate();
     }
   }
 
@@ -932,20 +880,11 @@ export class NewOrderComponent implements OnInit {
      ========================================= */
 
   private getCurrentSystemDate(): string {
+    const today = new Date();
 
-    const today =
-      new Date();
-
-    const day =
-      String(today.getDate())
-        .padStart(2, '0');
-
-    const month =
-      String(today.getMonth() + 1)
-        .padStart(2, '0');
-
-    const year =
-      today.getFullYear();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
 
     return `${day}-${month}-${year}`;
   }
@@ -954,50 +893,26 @@ export class NewOrderComponent implements OnInit {
      LOAD ORDER
      ========================================= */
 
-  private loadOrder(
-    order: SalesOrder
-  ): void {
+  private loadOrder(order: SalesOrder): void {
+    this.orderId = order.id;
+    this.routePlan = order.routePlan;
+    this.voucherType = order.voucherType;
+    this.voucherNumber = order.voucherNumber;
+    this.date = order.date;
+    this.customer = order.customer;
 
-    this.orderId =
-      order.id;
+    this.balance = order.balance;
+    this.overdue = order.overdue;
+    this.lastPayment = order.lastPayment;
 
-    this.routePlan =
-      order.routePlan;
+    this.deliveryDate = order.deliveryDate;
+    this.notes = order.notes;
 
-    this.voucherType =
-      order.voucherType;
+    this.authorized = order.authorized;
 
-    this.voucherNumber =
-      order.voucherNumber;
-
-    this.date =
-      order.date;
-
-    this.customer =
-      order.customer;
-
-    this.balance =
-      order.balance;
-
-    this.overdue =
-      order.overdue;
-
-    this.lastPayment =
-      order.lastPayment;
-
-    this.deliveryDate =
-      order.deliveryDate;
-
-    this.notes =
-      order.notes;
-
-    this.authorized =
-      order.authorized;
-
-    this.products =
-      order.items.map(item => ({
-        ...item
-      }));
+    this.products = order.items.map(item => ({
+      ...item
+    }));
   }
 
   /* =========================================
@@ -1005,35 +920,43 @@ export class NewOrderComponent implements OnInit {
      ========================================= */
 
   openVoucherTypeSelector(): void {
-
-    this.showVoucherTypeSelector =
-      true;
+    this.showVoucherTypeSelector = true;
   }
 
   closeVoucherTypeSelector(): void {
-
-    this.showVoucherTypeSelector =
-      false;
+    this.showVoucherTypeSelector = false;
   }
 
-  selectVoucherType(
-    type: string
-  ): void {
+  private getNextVoucherNumber(): string {
+    const orders = this.store.getOrders();
 
-    this.voucherType =
-      type;
+    let nextNumber = 10001;
+
+    for (const order of orders) {
+      const match = order.voucherNumber?.match(/^VR-(\d+)$/);
+
+      if (match) {
+        nextNumber = Math.max(
+          nextNumber,
+          Number(match[1]) + 1
+        );
+      }
+    }
+
+    return `VR-${nextNumber}`;
+  }
+
+  selectVoucherType(type: string): void {
+    this.voucherType = type;
 
     if (
       type === 'Voucher Receipt' &&
       !this.voucherNumber
     ) {
-
-      this.voucherNumber =
-        'VR-10001';
+      this.voucherNumber = this.getNextVoucherNumber();
     }
 
-    this.showVoucherTypeSelector =
-      false;
+    this.showVoucherTypeSelector = false;
   }
 
   /* =========================================
@@ -1041,7 +964,6 @@ export class NewOrderComponent implements OnInit {
      ========================================= */
 
   get productCategories(): string[] {
-
     return [
       'All Products',
       'PVC Trunking',
@@ -1059,28 +981,21 @@ export class NewOrderComponent implements OnInit {
     ];
   }
 
-  getProductCategory(
-    product: CatalogueProduct
-  ): string {
-
+  getProductCategory(product: CatalogueProduct): string {
     return product.category;
   }
 
   onProductCategoryChange(): void {
-
     this.productSearch = '';
     this.cataloguePage = 1;
   }
 
   onProductSearchChange(): void {
-
     this.cataloguePage = 1;
   }
 
   clearProductSearch(): void {
-
     this.productSearch = '';
-
     this.cataloguePage = 1;
   }
 
@@ -1089,14 +1004,9 @@ export class NewOrderComponent implements OnInit {
      ========================================= */
 
   get filteredProductCatalogue(): CatalogueProduct[] {
+    let products = this.productCatalogue;
 
-    let products =
-      this.productCatalogue;
-
-    if (
-      this.productCategory === 'All Products'
-    ) {
-
+    if (this.productCategory === 'All Products') {
       const parentProductCodes = [
         'PNT1001',
         'SHT1002',
@@ -1104,43 +1014,23 @@ export class NewOrderComponent implements OnInit {
         'SHO1004'
       ];
 
-      products =
-        products.filter(product =>
-          !parentProductCodes.includes(product.code)
-        );
-
+      products = products.filter(
+        product => !parentProductCodes.includes(product.code)
+      );
     } else {
-
-      products =
-        products.filter(product =>
-          product.category ===
-          this.productCategory
-        );
+      products = products.filter(
+        product => product.category === this.productCategory
+      );
     }
 
-    const value =
-      this.productSearch
-        .trim()
-        .toLowerCase();
+    const value = this.productSearch.trim().toLowerCase();
 
     if (value) {
-
-      products =
-        products.filter(product =>
-
-          product.name
-            .toLowerCase()
-            .includes(value) ||
-
-          product.code
-            .toLowerCase()
-            .includes(value) ||
-
-          product.size
-            .toLowerCase()
-            .includes(value)
-
-        );
+      products = products.filter(product =>
+        product.name.toLowerCase().includes(value) ||
+        product.code.toLowerCase().includes(value) ||
+        product.size.toLowerCase().includes(value)
+      );
     }
 
     return products;
@@ -1151,12 +1041,10 @@ export class NewOrderComponent implements OnInit {
      ========================================= */
 
   get isFullWidthCatalogue(): boolean {
-
     return (
       this.productCategory === 'All Products' &&
       !this.productSearch.trim() &&
-      this.pagedProductCatalogue.length ===
-        this.cataloguePageSize
+      this.pagedProductCatalogue.length === this.cataloguePageSize
     );
   }
 
@@ -1165,7 +1053,6 @@ export class NewOrderComponent implements OnInit {
      ========================================= */
 
   get pagedProductCatalogue(): CatalogueProduct[] {
-
     const start =
       (this.cataloguePage - 1) *
       this.cataloguePageSize;
@@ -1177,7 +1064,6 @@ export class NewOrderComponent implements OnInit {
   }
 
   get cataloguePageCount(): number {
-
     return Math.max(
       1,
       Math.ceil(
@@ -1188,42 +1074,32 @@ export class NewOrderComponent implements OnInit {
   }
 
   firstCataloguePage(): void {
-
     this.cataloguePage = 1;
   }
 
   previousCataloguePage(): void {
-
-    this.cataloguePage =
-      Math.max(
-        1,
-        this.cataloguePage - 1
-      );
+    this.cataloguePage = Math.max(
+      1,
+      this.cataloguePage - 1
+    );
   }
 
   nextCataloguePage(): void {
-
-    this.cataloguePage =
-      Math.min(
-        this.cataloguePageCount,
-        this.cataloguePage + 1
-      );
+    this.cataloguePage = Math.min(
+      this.cataloguePageCount,
+      this.cataloguePage + 1
+    );
   }
 
   lastCataloguePage(): void {
-
-    this.cataloguePage =
-      this.cataloguePageCount;
+    this.cataloguePage = this.cataloguePageCount;
   }
 
   /* =========================================
      SELECT PRODUCT FROM CATALOGUE
      ========================================= */
 
-  selectCatalogueProduct(
-    product: CatalogueProduct
-  ): void {
-
+  selectCatalogueProduct(product: CatalogueProduct): void {
     this.addProduct(product);
   }
 
@@ -1231,20 +1107,13 @@ export class NewOrderComponent implements OnInit {
      PRODUCTS / ORDER ROWS
      ========================================= */
 
-  addProduct(
-    product: OrderItem
-  ): void {
-
-    const existing =
-      this.products.find(
-        item =>
-          item.code === product.code
-      );
+  addProduct(product: OrderItem): void {
+    const existing = this.products.find(
+      item => item.code === product.code
+    );
 
     if (existing) {
-
       existing.qty++;
-
       return;
     }
 
@@ -1255,18 +1124,11 @@ export class NewOrderComponent implements OnInit {
     });
   }
 
-  amount(
-    product: OrderItem
-  ): number {
-
-    return (
-      product.qty *
-      product.orderRate
-    );
+  amount(product: OrderItem): number {
+    return product.qty * product.orderRate;
   }
 
   get subtotal(): number {
-
     return this.products.reduce(
       (sum, product) =>
         sum + this.amount(product),
@@ -1275,12 +1137,10 @@ export class NewOrderComponent implements OnInit {
   }
 
   get vat(): number {
-
     return this.subtotal * 0.05;
   }
 
   get total(): number {
-
     return this.subtotal + this.vat;
   }
 
@@ -1288,34 +1148,26 @@ export class NewOrderComponent implements OnInit {
     product: OrderItem,
     delta: number
   ): void {
-
-    product.qty =
-      Math.max(
-        1,
-        product.qty + delta
-      );
+    product.qty = Math.max(
+      1,
+      product.qty + delta
+    );
   }
 
   adjustRate(
     product: OrderItem,
     delta: number
   ): void {
-
-    product.orderRate =
-      Math.max(
-        0,
-        product.orderRate + delta
-      );
+    product.orderRate = Math.max(
+      0,
+      product.orderRate + delta
+    );
   }
 
-  deleteProduct(
-    product: OrderItem
-  ): void {
-
-    this.products =
-      this.products.filter(
-        item => item !== product
-      );
+  deleteProduct(product: OrderItem): void {
+    this.products = this.products.filter(
+      item => item !== product
+    );
   }
 
   /* =========================================
@@ -1323,9 +1175,30 @@ export class NewOrderComponent implements OnInit {
      ========================================= */
 
   toggleAuthorize(): void {
+    this.authorized = !this.authorized;
+  }
 
-    this.authorized =
-      !this.authorized;
+  /* =========================================
+     CREATE UNIQUE ORDER ID
+     ========================================= */
+
+  private getNextOrderId(): string {
+    const orders = this.store.getOrders();
+
+    let nextNumber = 10001;
+
+    for (const order of orders) {
+      const match = order.id?.match(/^SO-(\d+)$/);
+
+      if (match) {
+        nextNumber = Math.max(
+          nextNumber,
+          Number(match[1]) + 1
+        );
+      }
+    }
+
+    return `SO-${nextNumber}`;
   }
 
   /* =========================================
@@ -1333,59 +1206,53 @@ export class NewOrderComponent implements OnInit {
      ========================================= */
 
   private buildOrder(): SalesOrder {
+    if (!this.orderId) {
+      this.orderId = this.getNextOrderId();
+    }
+
+    if (
+      !this.voucherNumber &&
+      this.voucherType === 'Voucher Receipt'
+    ) {
+      this.voucherNumber = this.getNextVoucherNumber();
+    }
 
     return {
+      id: this.orderId,
 
-      id:
-        this.orderId,
+      voucherNumber: this.voucherNumber,
 
-      voucherNumber:
-        this.voucherNumber,
+      voucherType: this.voucherType,
 
-      voucherType:
-        this.voucherType,
+      routePlan: this.routePlan,
 
-      routePlan:
-        this.routePlan,
+      date: this.date,
 
-      date:
-        this.date,
+      customer: this.customer,
 
-      customer:
-        this.customer,
+      balance: this.balance,
 
-      balance:
-        this.balance,
+      overdue: this.overdue,
 
-      overdue:
-        this.overdue,
+      lastPayment: this.lastPayment,
 
-      lastPayment:
-        this.lastPayment,
+      deliveryDate: this.deliveryDate,
 
-      deliveryDate:
-        this.deliveryDate,
+      notes: this.notes,
 
-      notes:
-        this.notes,
+      authorized: this.authorized,
 
-      authorized:
-        this.authorized,
+      status: this.authorized
+        ? 'Approved'
+        : 'Pending',
 
-      status:
-        this.authorized
-          ? 'Approved'
-          : 'Pending',
+      isDraft: !this.authorized,
 
-      isDraft:
-        !this.authorized,
-
-      items:
-        this.products.map(
-          product => ({
-            ...product
-          })
-        )
+      items: this.products.map(
+        product => ({
+          ...product
+        })
+      )
     };
   }
 
@@ -1394,36 +1261,27 @@ export class NewOrderComponent implements OnInit {
      ========================================= */
 
   save(): void {
+    const saved = this.store.commit(
+      this.buildOrder()
+    );
 
-    const saved =
-      this.store.commit(
-        this.buildOrder()
-      );
+    this.orderId = saved.id;
+    this.voucherNumber = saved.voucherNumber;
 
-    this.orderId =
-      saved.id;
-
-    this.voucherNumber =
-      saved.voucherNumber;
+    this.store.setCurrent(saved);
 
     this.savedOrderNumber =
       saved.voucherNumber;
 
-    this.showSaveSuccess =
-      true;
+    this.showSaveSuccess = true;
 
     setTimeout(() => {
-
-      this.showSaveSuccess =
-        false;
-
+      this.showSaveSuccess = false;
     }, 2000);
   }
 
   closeSaveSuccess(): void {
-
-    this.showSaveSuccess =
-      false;
+    this.showSaveSuccess = false;
   }
 
   /* =========================================
@@ -1431,13 +1289,9 @@ export class NewOrderComponent implements OnInit {
      ========================================= */
 
   review(): void {
+    const order = this.buildOrder();
 
-    const order =
-      this.buildOrder();
-
-    this.store.setCurrent(
-      order
-    );
+    this.store.setCurrent(order);
 
     this.router.navigate([
       '/review-order'
@@ -1449,21 +1303,29 @@ export class NewOrderComponent implements OnInit {
      ========================================= */
 
   draft(): void {
+    const saved = this.store.saveDraft(
+      this.buildOrder()
+    );
 
-    const saved =
-      this.store.saveDraft(
-        this.buildOrder()
-      );
+    this.orderId = saved.id;
+    this.voucherNumber = saved.voucherNumber;
 
-    this.orderId =
-      saved.id;
-
-    this.voucherNumber =
+    this.savedDraftNumber =
       saved.voucherNumber;
 
-    this.router.navigate([
-      '/saved-draft'
-    ]);
+    this.showDraftSuccess = true;
+
+    setTimeout(() => {
+      this.showDraftSuccess = false;
+
+      this.router.navigate([
+        '/saved-draft'
+      ]);
+    }, 1000);
+  }
+
+  closeDraftSuccess(): void {
+    this.showDraftSuccess = false;
   }
 
   /* =========================================
@@ -1471,37 +1333,27 @@ export class NewOrderComponent implements OnInit {
      ========================================= */
 
   openList(): void {
-
     this.search = '';
-
     this.page = 1;
-
     this.showList = true;
   }
 
   closeList(): void {
-
-    this.showList =
-      false;
+    this.showList = false;
   }
 
   get filteredOrders(): SalesOrder[] {
-
     const value =
-      this.search
-        .trim()
-        .toLowerCase();
+      this.search.trim().toLowerCase();
 
     const orders =
       this.store.getOrders();
 
     if (!value) {
-
       return orders;
     }
 
     return orders.filter(order =>
-
       order.voucherNumber
         .toLowerCase()
         .includes(value) ||
@@ -1517,12 +1369,10 @@ export class NewOrderComponent implements OnInit {
       order.voucherType
         .toLowerCase()
         .includes(value)
-
     );
   }
 
   get pagedOrders(): SalesOrder[] {
-
     const start =
       (this.page - 1) *
       this.pageSize;
@@ -1534,7 +1384,6 @@ export class NewOrderComponent implements OnInit {
   }
 
   get pageCount(): number {
-
     return Math.max(
       1,
       Math.ceil(
@@ -1544,55 +1393,125 @@ export class NewOrderComponent implements OnInit {
     );
   }
 
-  editOrder(
-    order: SalesOrder
-  ): void {
-
-    this.store.beginEdit(
-      order.id
+  get orderPageNumbers(): number[] {
+    return Array.from(
+      { length: this.pageCount },
+      (_, index) => index + 1
     );
+  }
+
+  editOrder(order: SalesOrder): void {
+    this.store.beginEdit(order.id);
 
     const current =
       this.store.getCurrent();
 
     if (current) {
-
-      this.loadOrder(
-        current
-      );
+      this.loadOrder(current);
     }
 
-    this.showList =
-      false;
+    this.showList = false;
+  }
+
+  /* =========================================
+     DELETE CONFIRMATION MODAL
+     ========================================= */
+
+  deleteOrder(order: SalesOrder): void {
+    this.orderToDelete = order;
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteModal(): void {
+    this.showDeleteModal = false;
+    this.orderToDelete = null;
+  }
+
+  confirmDeleteOrder(): void {
+    if (!this.orderToDelete) {
+      return;
+    }
+
+    const order =
+      this.orderToDelete;
+
+    const wasCurrent =
+      this.orderId === order.id;
+
+    const ordersBeforeDelete =
+      this.store.getOrders();
+
+    const deletedIndex =
+      ordersBeforeDelete.findIndex(
+        item => item.id === order.id
+      );
+
+    if (deletedIndex < 0) {
+      this.closeDeleteModal();
+      return;
+    }
+
+    const deleted =
+      this.store.deleteOrder(order.id);
+
+    if (!deleted) {
+      this.closeDeleteModal();
+      return;
+    }
+
+    if (wasCurrent) {
+      const remainingOrders =
+        this.store.getOrders();
+
+      if (remainingOrders.length > 0) {
+        const nextIndex =
+          Math.min(
+            deletedIndex,
+            remainingOrders.length - 1
+          );
+
+        const nextOrder =
+          remainingOrders[nextIndex];
+
+        this.loadOrder(nextOrder);
+
+        this.store.setCurrent(
+          nextOrder
+        );
+      } else {
+        this.store.beginNew();
+        this.resetNewOrderForm();
+      }
+    }
+
+    this.page = Math.min(
+      this.page,
+      this.pageCount
+    );
+
+    this.closeDeleteModal();
   }
 
   firstPage(): void {
-
     this.page = 1;
   }
 
   previousPage(): void {
-
-    this.page =
-      Math.max(
-        1,
-        this.page - 1
-      );
+    this.page = Math.max(
+      1,
+      this.page - 1
+    );
   }
 
   nextPage(): void {
-
-    this.page =
-      Math.min(
-        this.pageCount,
-        this.page + 1
-      );
+    this.page = Math.min(
+      this.pageCount,
+      this.page + 1
+    );
   }
 
   lastPage(): void {
-
-    this.page =
-      this.pageCount;
+    this.page = this.pageCount;
   }
 
   amountForItems = (
@@ -1602,7 +1521,6 @@ export class NewOrderComponent implements OnInit {
       orderRate: number;
     }
   ): number => {
-
     return (
       sum +
       item.qty *
@@ -1611,27 +1529,188 @@ export class NewOrderComponent implements OnInit {
   };
 
   /* =========================================
+     ORDER NAVIGATION
+     ========================================= */
+
+  get savedOrders(): SalesOrder[] {
+    return this.store.getOrders();
+  }
+
+  /*
+   * IMPORTANT:
+   *
+   * OrderStoreService stores the newest order first.
+   *
+   * Example store order:
+   *
+   * [SO-10002, SO-10001]
+   *
+   * For Previous / Next we need:
+   *
+   * [SO-10001, SO-10002]
+   *
+   * Therefore navigation uses a reversed copy.
+   *
+   * First saved order:
+   * Previous = disabled
+   * Next = enabled
+   *
+   * Second/latest saved order:
+   * Previous = enabled
+   * Next = disabled
+   */
+  private get navigationOrders(): SalesOrder[] {
+    return [...this.store.getOrders()].reverse();
+  }
+
+  get currentOrderIndex(): number {
+    if (!this.orderId) {
+      return -1;
+    }
+
+    return this.navigationOrders.findIndex(
+      order => order.id === this.orderId
+    );
+  }
+
+  get canGoPrevious(): boolean {
+    const index = this.currentOrderIndex;
+
+    return (
+      index > 0 &&
+      this.navigationOrders.length > 1
+    );
+  }
+
+  get canGoNext(): boolean {
+    const index = this.currentOrderIndex;
+
+    return (
+      index >= 0 &&
+      index < this.navigationOrders.length - 1
+    );
+  }
+
+  previousOrder(): void {
+    const orders = this.navigationOrders;
+
+    const index = orders.findIndex(
+      order => order.id === this.orderId
+    );
+
+    if (index <= 0) {
+      return;
+    }
+
+    const previousOrder =
+      orders[index - 1];
+
+    this.loadOrder(previousOrder);
+
+    this.store.setCurrent(
+      previousOrder
+    );
+  }
+
+  nextOrder(): void {
+    const orders = this.navigationOrders;
+
+    const index = orders.findIndex(
+      order => order.id === this.orderId
+    );
+
+    if (
+      index < 0 ||
+      index >= orders.length - 1
+    ) {
+      return;
+    }
+
+    const nextOrder =
+      orders[index + 1];
+
+    this.loadOrder(nextOrder);
+
+    this.store.setCurrent(
+      nextOrder
+    );
+  }
+
+  /* =========================================
      NAVIGATION
      ========================================= */
 
   cancel(): void {
-
     this.router.navigate([
       '/sales-order'
     ]);
   }
 
   add(): void {
-
     this.store.beginNew();
+
+    this.resetNewOrderForm();
 
     this.router.navigate([
       '/new-order'
     ]);
   }
 
-  list(): void {
+  private resetNewOrderForm(): void {
+    this.orderId = '';
 
+    this.routePlan = '';
+
+    this.voucherType = '';
+
+    this.voucherNumber = '';
+
+    this.date =
+      this.getCurrentSystemDate();
+
+    this.customer = '';
+
+    this.balance = 3250;
+
+    this.overdue = 750;
+
+    this.lastPayment = '12 Sep';
+
+    this.deliveryDate = '';
+
+    this.notes = '';
+
+    this.authorized = false;
+
+    this.products = [];
+
+    this.productCategory =
+      'All Products';
+
+    this.productSearch = '';
+
+    this.cataloguePage = 1;
+
+    this.showVoucherTypeSelector =
+      false;
+
+    this.showSaveSuccess =
+      false;
+
+    this.savedOrderNumber = '';
+
+    this.showDeleteModal =
+      false;
+
+    this.orderToDelete = null;
+
+    this.showDraftSuccess =
+      false;
+
+    this.savedDraftNumber = '';
+  }
+
+  list(): void {
     this.openList();
   }
 }

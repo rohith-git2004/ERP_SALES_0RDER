@@ -39,109 +39,114 @@ export interface SalesOrder {
 })
 export class OrderStoreService {
 
-  private orders: SalesOrder[] = [
-    this.seed(
-      'SO-1005',
-      'VR-10005',
-      '30-09-2026',
-      'ROHIT CUSTOMER',
-      3000,
-      'Approved'
-    ),
+  private orders: SalesOrder[] = [];
 
-    this.seed(
-      'SO-1004',
-      'VR-10004',
-      '30-09-2026',
-      'TEST CUSTOMER ROHIT',
-      50,
-      'Pending'
-    ),
-
-    this.seed(
-      'SO-1003',
-      'VR-10003',
-      '30-09-2026',
-      'TEST CUSTOMER ROHIT',
-      2000,
-      'Approved'
-    ),
-
-    this.seed(
-      'SO-1002',
-      'VR-10002',
-      '30-09-2026',
-      'TEST CUSTOMER ROHIT',
-      1150,
-      'Pending'
-    ),
-
-    this.seed(
-      'SO-1001',
-      'VR-10001',
-      '30-09-2026',
-      'TEST CUSTOMER ROHIT',
-      575,
-      'Approved'
-    )
-  ];
+  private readonly STORAGE_KEY =
+    'erp_sales_orders';
 
   private current: SalesOrder | null = null;
+
   private editingId: string | null = null;
-  private sequence = 10006;
 
-  private seed(
-    id: string,
-    voucherNumber: string,
-    date: string,
-    customer: string,
-    amount: number,
-    status: OrderStatus
-  ): SalesOrder {
+  private sequence = 10001;
 
-    const items: OrderItem[] = [
-      {
-        name: 'PVC Trunking 16 x 16',
-        code: 'PVC1616',
-        size: '16 × 16 mm',
-        available: 148,
-        spRate: 4,
-        qty: 1,
-        orderRate: 4
+  constructor() {
+    this.loadFromStorage();
+  }
+
+  private loadFromStorage(): void {
+    const saved =
+      localStorage.getItem(
+        this.STORAGE_KEY
+      );
+
+    if (!saved) {
+      this.orders = [];
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(saved);
+
+      if (!Array.isArray(parsed)) {
+        this.orders = [];
+        return;
       }
-    ];
 
-    return {
-      id,
-      voucherNumber,
-      voucherType: 'Voucher Receipt',
-      routePlan: 'Dubai',
-      date,
-      customer,
+      this.orders = parsed.map(
+        (order: SalesOrder) =>
+          this.clone(order)
+      );
 
-      balance: 3250,
-      overdue: 750,
-      lastPayment: '12 Sep',
+      this.updateSequence();
 
-      deliveryDate: '',
-      notes: '',
+    } catch {
+      this.orders = [];
+    }
+  }
 
-      status,
-      authorized: status === 'Approved',
-      isDraft: status === 'Pending',
+  private saveToStorage(): void {
+    localStorage.setItem(
+      this.STORAGE_KEY,
+      JSON.stringify(this.orders)
+    );
+  }
 
-      items
-    };
+  private updateSequence(): void {
+    let highest = 10000;
+
+    this.orders.forEach(order => {
+      const orderMatch =
+        order.id &&
+        order.id.match(/^SO-(\d+)$/);
+
+      if (orderMatch) {
+        const number =
+          Number(orderMatch[1]);
+
+        if (
+          Number.isFinite(number) &&
+          number > highest
+        ) {
+          highest = number;
+        }
+      }
+
+      const voucherMatch =
+        order.voucherNumber &&
+        order.voucherNumber.match(/^VR-(\d+)$/);
+
+      if (voucherMatch) {
+        const number =
+          Number(voucherMatch[1]);
+
+        if (
+          Number.isFinite(number) &&
+          number > highest
+        ) {
+          highest = number;
+        }
+      }
+    });
+
+    this.sequence = highest + 1;
   }
 
   getOrders(): SalesOrder[] {
-    return this.orders.map(order => this.clone(order));
+    return this.orders.map(
+      order => this.clone(order)
+    );
   }
 
   getDrafts(): SalesOrder[] {
     return this.orders
-      .filter(order => order.isDraft === true)
-      .map(order => this.clone(order));
+      .filter(
+        order =>
+          order.isDraft === true
+      )
+      .map(
+        order => this.clone(order)
+      );
   }
 
   beginNew(): void {
@@ -149,24 +154,36 @@ export class OrderStoreService {
     this.current = null;
   }
 
-  beginEdit(id: string): SalesOrder | null {
-    const order = this.orders.find(
-      item => item.id === id
-    );
+  beginEdit(
+    id: string
+  ): SalesOrder | null {
+
+    const order =
+      this.orders.find(
+        item => item.id === id
+      );
 
     if (!order) {
       return null;
     }
 
     this.editingId = id;
-    this.current = this.clone(order);
+
+    this.current =
+      this.clone(order);
 
     return this.clone(order);
   }
 
-  setCurrent(order: SalesOrder): void {
-    this.current = this.clone(order);
-    this.editingId = order.id || null;
+  setCurrent(
+    order: SalesOrder
+  ): void {
+
+    this.current =
+      this.clone(order);
+
+    this.editingId =
+      order.id || null;
   }
 
   getCurrent(): SalesOrder | null {
@@ -175,15 +192,21 @@ export class OrderStoreService {
       : null;
   }
 
-  saveDraft(order: SalesOrder): SalesOrder {
-    const prepared = this.prepareOrder(
-      order,
-      true
-    );
+  saveDraft(
+    order: SalesOrder
+  ): SalesOrder {
 
-    const index = this.orders.findIndex(
-      item => item.id === prepared.id
-    );
+    const prepared =
+      this.prepareOrder(
+        order,
+        true
+      );
+
+    const index =
+      this.orders.findIndex(
+        item =>
+          item.id === prepared.id
+      );
 
     if (index >= 0) {
       this.orders[index] =
@@ -199,19 +222,27 @@ export class OrderStoreService {
 
     this.editingId =
       prepared.id;
+
+    this.saveToStorage();
 
     return this.clone(prepared);
   }
 
-  commit(order: SalesOrder): SalesOrder {
-    const prepared = this.prepareOrder(
-      order,
-      false
-    );
+  commit(
+    order: SalesOrder
+  ): SalesOrder {
 
-    const index = this.orders.findIndex(
-      item => item.id === prepared.id
-    );
+    const prepared =
+      this.prepareOrder(
+        order,
+        false
+      );
+
+    const index =
+      this.orders.findIndex(
+        item =>
+          item.id === prepared.id
+      );
 
     if (index >= 0) {
       this.orders[index] =
@@ -227,6 +258,8 @@ export class OrderStoreService {
 
     this.editingId =
       prepared.id;
+
+    this.saveToStorage();
 
     return this.clone(prepared);
   }
@@ -236,9 +269,11 @@ export class OrderStoreService {
     authorized: boolean
   ): void {
 
-    const index = this.orders.findIndex(
-      order => order.id === id
-    );
+    const index =
+      this.orders.findIndex(
+        order =>
+          order.id === id
+      );
 
     if (index < 0) {
       return;
@@ -270,6 +305,40 @@ export class OrderStoreService {
       this.current.isDraft =
         !authorized;
     }
+
+    this.saveToStorage();
+  }
+
+  deleteOrder(
+    id: string
+  ): boolean {
+
+    const index =
+      this.orders.findIndex(
+        order =>
+          order.id === id
+      );
+
+    if (index < 0) {
+      return false;
+    }
+
+    this.orders.splice(
+      index,
+      1
+    );
+
+    if (
+      this.current &&
+      this.current.id === id
+    ) {
+      this.current = null;
+      this.editingId = null;
+    }
+
+    this.saveToStorage();
+
+    return true;
   }
 
   private prepareOrder(
@@ -301,7 +370,8 @@ export class OrderStoreService {
         : 'Pending';
 
     prepared.isDraft =
-      draft && !prepared.authorized;
+      draft &&
+      !prepared.authorized;
 
     return prepared;
   }
@@ -314,13 +384,17 @@ export class OrderStoreService {
     return `VR-${this.sequence++}`;
   }
 
-  clone(order: SalesOrder): SalesOrder {
+  clone(
+    order: SalesOrder
+  ): SalesOrder {
+
     return {
       ...order,
-
-      items: order.items.map(item => ({
-        ...item
-      }))
+      items: order.items.map(
+        item => ({
+          ...item
+        })
+      )
     };
   }
 }
